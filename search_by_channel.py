@@ -5,12 +5,15 @@
 # ===================================================================================
 import yt_dlp
 import csv
+import configparser
+import os
 # ===================================================================================
-#channel_videos_url = "https://www.youtube.com/@SlowEasyEnglish/videos"
-#channel_videos_url = "https://www.youtube.com/@EnglishLingo/videos"
-channel_videos_url = "https://www.youtube.com/@EnglishLearningHubOfficial/videos"
-output_csv = "EnglishLearningHubOfficial.csv"
-#search_keyword = "grade 10"       # Keyword must be in small letter
+# Read from settings.ini
+config = configparser.ConfigParser()
+config.read('settings.ini')
+
+channel_url = config.get('Settings', 'channel_url')
+output_csv = config.get('Settings', 'csv_name')
 # ===================================================================================
 ydl_opts = {
     'quiet': True,
@@ -21,7 +24,7 @@ ydl_opts = {
 }
 
 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-    info = ydl.extract_info(channel_videos_url, download=False)
+    info = ydl.extract_info(channel_url, download=False)
 
 videos = info.get('entries', []) if info else []
 # ===================================================================================
@@ -34,7 +37,6 @@ with open(output_csv, mode='w', newline='', encoding='utf-8') as file:
             video_id = video['id']
             title = video['title']
             url = f"https://www.youtube.com/watch?v={video_id}"
-            #if search_keyword in title.lower():  # case-insensitive match
             writer.writerow([video_id, title, url])
 # ===================================================================================
-print(f"\n\033[92m[INFO]\033[0mExported {len(videos)} videos to {output_csv}")
+print(f"\n\033[92m[INFO]\033[0m Exported {len(videos)} videos to {output_csv}")

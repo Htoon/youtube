@@ -3,10 +3,15 @@
 # ============================================================================
 import os
 import csv
+import configparser
 import re
 # ============================================================================
-videos_folder = "EnglishLearningHubOfficial"
-csv_file = "EnglishLearningHubOfficial.csv"
+# Read from settings.ini
+config = configparser.ConfigParser()
+config.read('settings.ini')
+
+videos_folder = config.get('Settings', 'video_dir')
+csv_file = config.get('Settings', 'csv_name')
 rename_count = 0
 # ============================================================================
 def sanitize_filename(name):
@@ -32,7 +37,7 @@ for filename in os.listdir(videos_folder):
     filepath = os.path.join(videos_folder, filename)
 
     # Try to extract the video ID from filename like "#MkpR0cKWCfE"
-    match = re.search(r'#([a-zA-Z0-9_-]{11})', filename)
+    match = re.search(r'([a-zA-Z0-9_-]{11})', filename)
     if not match:
         continue
 

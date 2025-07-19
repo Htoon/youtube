@@ -2,10 +2,15 @@
 # Generate Subtitle Files using Whisper Library
 # Video files must be in video_folder
 # ============================================================================
+import configparser
 import os
 import whisper
 # ============================================================================
-video_folder = "EnglishLearningHubOfficial"
+# Read from settings.ini
+config = configparser.ConfigParser()
+config.read('settings.ini')
+
+video_folder = config.get('Settings', 'video_dir')
 # ============================================================================
 # Join script_dir and video_folder
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -57,7 +62,6 @@ def generate_srt_for_all_mp4s_in_folder():
     # Final summary split into two lines
     print(f"\n\033[92m[INFO]\033[0m Total {complete_count} file{'s' if complete_count != 1 else ''} generated.")
     print(f"\033[93m[INFO]\033[0m {skip_count} file{'s' if skip_count != 1 else ''} skipped.")
-
 # ============================================================================
 if __name__ == "__main__":
     generate_srt_for_all_mp4s_in_folder()
